@@ -1,0 +1,52 @@
+<!doctype html>
+<head>
+    <meta http-equip="CONTENT-TYPE" content="text/html; charset=UTF-8">
+    <meta name=AUTHOR content="Peter Margetiak">    
+    <meta name=COPYRIGHT content="&copy; 2011 Peter Margetiak">
+    <meta name=DESCRIPTION content="lokalne volby">
+    
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>
+        {% block headtitle %}  {{ self.title() }} {% endblock %}
+    </title>
+</head>
+
+<body>
+    <div id="wrapper">
+		<div id="header">
+            <h1><img src="{{ url_for('static',filename='css/images/header/voting.gif') }}"  height="45" alt="Local Election system">Local voting software system</h1>
+          
+            <div id='nav'>  
+                <a href="{{ url_for('index') }}" id="home">Home</a>
+
+            </div>
+			
+		</div>
+        <div id="headline">	
+                {% for category, msg in get_flashed_messages(with_categories=true) %}
+                <div class="{{ category }}">
+                    {{ msg }} 
+                </div>
+                {% endfor %}
+		</div>
+        <div id="body">
+            <!-- body start --> 
+            <div id="body-left">
+		        {% block body %}{% endblock %}	
+            </div>
+            <!-- body  end   --> 
+            <!-- right start --> 
+			<div id="body-right">
+                {% block right %}{% endblock %}            
+			</div>
+	    </div>
+		<div class="clear"></div>
+		</div>
+ 
+    
+    <div id="footer">
+		<div>Template designed by <a href='http://www.freewebtemplates.com'>freewebtemplates</a> &copy; 2006 all rights reserved.</div>
+	</div>
+</body>
+</html>
