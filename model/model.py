@@ -31,3 +31,21 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User ('%s','%s','%s','%s')>" % (self.name,self.username,self.mail,self.confirm_status)
+
+class Election(db.Model):
+    __tablename__ = 'election'
+    id =        db.Column(db.Integer, primary_key=True)
+    title =     db.Column(db.String(100))
+    text =      db.Column(db.Text)
+    date_from = db.Column(db.DateTime)
+    date_to =   db.Column(db.DateTime)
+    show  =     db.Column(db.Boolean)
+
+    def __init__(self, title, text, start = None, end = None, show=False):
+        self.title   = title
+        self.text    = text
+        self.show  = zobraz
+        if start:
+            self.date_od = start
+        if end:
+            self.date_do = end

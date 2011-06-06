@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% import "macros/forms.html" as form %}
+{% from "macros/links.html" import link %}
+
+{% block title %}Administrácia volieb {% endblock %}
+
+{% block body %}
+    
+    <ul class=entries> 
+        <a href="{{ url_for('admin')}}">ADMINISTRATION</a> >> 
+        <a href="{{ url_for('admin_election')}}">Election</a>
+    </ul>
+    
+    <div class='volby'>
+    <h1>Election Administration</h1>
+        
+    {{ form.form(url_for('admin_election'),legend="New Election") }}
+   
+        {{ form.input(input['name'],type="text") }}
+        {{ form.input(input['desc'],type="textarea") }}   
+        {{ form.input_checkbox(input['show']) }}
+
+        {{ form.date(input['start']) }} 
+        {{ form.time(input['startTime'])}}
+       
+        {{ form.date(input['end']) }}        
+        {{ form.time(input['endTime'])}}
+
+        {{ form.submit(text='Save new Election') }}
+
+    {{ form.endform() }}
+   
+    <h1>Election Index</h1>
+    
+    {% for election in elections %} 
+    <fieldset> 
+        <h1>{{ election.title }}</h1> 
+        <div>
+            {{ election.text }}
+        </div>
+    </fieldset>
+    {% else %}
+      <p>
+        None election in database.
+      </p>
+    {% endfor %}  
+
+    </div>
+
+{% endblock %}

@@ -32,6 +32,66 @@
 </form>
 {% endmacro %}
 
+{% macro input_checkbox(Field="",class="input", bold=False, textRightAssign=False, type="checkbox", id=False, hidden = False) %}
+    {% if textRightAssign %}
+     <div class="{{ class }}"> 
+        <div class="forminput">
+            <input type="{{ type }}" name="{{ Field.name }}" 
+                {% if Field.checked %} checked {% endif %}
+                {% if id %} id = {{ id }} {% endif %}
+                {% if hidden %} readonly {% endif %}
+                {% if not Field.value == None %} value="{{ Field.value }}" {% endif %}
+            > 
+        </div>
+        <label for="{{ Field.label }}">{{ Field.label }}</label>             
+    </div>  
+    {% else %}
+    <div class="{{ class }}"> 
+        
+        <label for="{{ Field.label }}">{{ Field.label }}</label>
+        <div class="forminput">
+            <input type="{{ type }}" name="{{ Field.name }}" 
+                {% if Field.checked %} checked {% endif %}
+                {% if id %} id = {{ id }} {% endif %}
+                {% if hidden %} readonly {% endif %}
+                value="{{ Field.value }}"
+            >  
+        </div>             
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro date(Field) %}
+    <div class="input">
+        <label for="{{ Field.label }}">{{ Field.label }}</label>
+        <input type="{{ Field.type }}" name="{{ Field.name }}" value="{{ Field.value }}" id="{{ Field.name }}">
+    </div>   
+{% endmacro %}
+
+{% macro time(Field) %}
+    <div class="input">
+        <label for="{{ Field.label }}">{{ Field.label }}</label>
+        <select name="{{ Field.name_1 }}">
+        {% for i in range(0,24) %}
+            {% if (i == Field.value_1) %}
+            <option selected="selected" value={{ Field.value_1 }}>{{ Field.value_1 }}</option>
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %} 
+        {% endfor %}
+        </select>
+        <select name="{{ Field.name_2 }}">
+        {% for i in range(0,60) %}
+            {% if (i == Field.value_2) %}  
+            <option selected="selected" value={{ Field.value_2 }}>{{ Field.value_2 }}</option>          
+            {% else %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endif %} 
+        {% endfor %}
+        </select>
+    </div>   
+{% endmacro %}
+
 
 
 

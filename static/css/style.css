@@ -216,3 +216,21 @@ fieldset {
     margin-bottom: 1px;
     width: 150px;
     }
+
+/* election  */
+.volby {
+    font-family: Arial, Sans-Serif;
+    font-size: 13px; 
+    margin: 1em;
+    width: 550px;  
+    }
+
+.volby fieldset {
+    margin-bottom:1.5em;    
+    }
+
+.volby fieldset legend{
+    margin:1em;
+    font-size: 18px; 
+    font-weight: bold;
+    }
