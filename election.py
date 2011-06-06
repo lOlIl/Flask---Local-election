@@ -1,4 +1,5 @@
-from app import *
+from app import app
+from extensions.FlaskSQLAlchemy import db
 
 import routes
 

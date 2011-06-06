@@ -177,3 +177,42 @@ body {
     border: 1px solid #DCDCDC; 
     margin-bottom:0.5em;
     }
+
+/* inputs */
+
+fieldset {
+    padding: 0.5em 1em 0.2em 1em;
+}
+
+.input {
+    font-family: Arial, Sans-Serif;
+    font-size: 13px;
+    background-color: #EEEEFF;
+    padding: 5px;
+
+    }
+
+.input label {
+    width: 5em;
+    float: left;
+    text-align: right;
+    margin-right: 0.5em;
+    display: block
+    }
+
+/* login form */
+
+.login{
+    width:300px;
+    background-color: #EEEEFF;    
+    margin-left:auto;
+    margin-right:auto;
+    border:1px solid gray;
+    }
+.login input[type="text"], .login input[type="password"]{
+    font-family: Arial, Sans-Serif;
+    display: block;
+    padding: 5px; 
+    margin-bottom: 1px;
+    width: 150px;
+    }

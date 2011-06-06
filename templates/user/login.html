@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% import "macros/forms.html" as form %}
+
+{% block title %}Login page{% endblock %}
+
+{% block body %}
+  
+    {{ form.form(url_for('login'),class='login') }}    
+
+        {{ form.input(input['login']) }}
+        {{ form.input(input['pass'],type="password") }}
+
+        {{ form.submit(text='Log into App') }}
+
+    {{ form.endform() }}    
+
+{% endblock %}
+

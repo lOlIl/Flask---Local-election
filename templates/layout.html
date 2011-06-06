@@ -18,16 +18,14 @@
             <h1><img src="{{ url_for('static',filename='css/images/header/voting.gif') }}"  height="45" alt="Local Election system">Local voting software system</h1>
           
             <div id='nav'>  
-                <a href="{{ url_for('index') }}" id="home">Home</a>
-
+                <a href="{{ url_for('index') }}">Home</a>
+                {% if not session.user %}<a href="{{ url_for('login') }}">Login</a>{% else %}<a href="{{ url_for('logout') }}">Logout</a>{% endif %}
             </div>
 			
 		</div>
         <div id="headline">	
                 {% for category, msg in get_flashed_messages(with_categories=true) %}
-                <div class="{{ category }}">
-                    {{ msg }} 
-                </div>
+                <div class="{% if category!='message' %}{{ category }}{% else %}info{% endif %}"> {{ msg }} </div>
                 {% endfor %}
 		</div>
         <div id="body">
