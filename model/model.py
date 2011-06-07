@@ -71,3 +71,16 @@ class Question(db.Model):
 
     def __repr__(self):
         return '<Question %r>' % self.text
+
+class Answer(db.Model):
+    __tablename__ = 'answer'
+    id =        db.Column(db.Integer, primary_key=True)
+    text =      db.Column(db.String(100))
+    oid =       db.Column(db.Integer, ForeignKey('question.id'))
+   
+    def __init__(self, nazov, oid):
+        self.text = nazov
+        self.oid = oid
+
+    def __repr__(self):
+        return '<Answer %r>' % self.text

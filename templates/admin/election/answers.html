@@ -48,8 +48,32 @@
     
     {{ form.endform() }}
 
-    <hr>
 
-  
+    {{ form.form(url_for('admin_answers',id_question = question.id),legend="Pridávanie nových možnosti",id="my_form") }}
+
+        {{ form.input({'name':'answer','label':'Answer'} ) }}
+        {{ form.submit(text='Save this answer') }}        
+
+    {{ form.endform() }}
+
+    <hr>
+    {% if answers %} 
+
+    {% for answer in answers %}    
+
+        {{ form.form(url_for('admin_answer_update',id_answer = answer.id),legend="Edit answer") }}    
+
+            {{ form.input({'name':'answer','label':'Answer','value':answer.text} ) }}
+            {{ form.submit(text='Update answer') }}
+
+            <input type=button value="Delete this answer" onclick='delQuestion({{ answer.id }})'>
+
+
+        {{ form.endform() }}  
+
+    {% endfor %}  
+    
+    {% endif %}
+
 {% endblock %}
 

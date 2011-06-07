@@ -30,6 +30,7 @@ INFO_DICT = {
             'QUESTION_SIMPLE'           : u'Added new question with single answer',
             'QUESTION_UPDATED'          : u'The question has been successfully updated',
             'ANSWER_ADDED'              : u'Added new answer',
+            'ANSWER_UPDATED'            : u'The answer has been successfully updated',     
             }
 
 ERROR_DICT = {
@@ -279,3 +280,53 @@ def admin_question_edit(id_question):
 
     flash(ERROR_DICT['QUESTION_NONE'],category = 'error')
     return redirect(url_for('admin_election'))
+
+
+"""
+
+    Admin function for adding new answer to question 
+    Inputs: id_question(question ID)
+
+    Description:
+    - from dict(answer) add all answers
+
+"""
+
+@app.route('/admin/election/questions/<int:id_question>', methods=['GET', 'POST'])
+@admin_required
+def admin_answers(id_question):
+    toAdd = Question.query.filter_by(id = id_question).first()    
+    if request.method == 'POST' and toAdd:   
+        for answer in request.form.getlist('answer'):  
+            db.session.add(Answer(answer,id_question))
+            flash(INFO_DICT['ANSWER_ADDED'])
+            db.session.commit()     
+            
+        question = Question.query.filter_by(id = id_question).first()
+        return redirect(url_for('admin_questions',id_election = question.vid))
+
+    flash(ERROR_DICT['QUESTION_NONE'],category = 'error')
+    return redirect(url_for('admin_election'))
+
+"""
+
+Admin function for update selected answer of question 
+Inputs: otazka_id(question ID)
+
+Description:
+    - check, if question exists
+
+    on POST: - update the answer record with new 
+
+"""
+
+@app.route('/admin/election/answers/<int:id_answer>/update', methods=['GET', 'POST'])
+@admin_required
+def admin_answer_update(id_answer):
+    answer = Answer.query.filter_by(id = id_answer).first()
+    if request.method == 'POST' and answer:   
+        answer.text = unicode(request.form['answer'])
+        db.session.commit()
+        flash(INFO_DICT['ANSWER_UPDATED'])
+    
+    return redirect(url_for('admin_question_edit', id_question = answer.oid))
