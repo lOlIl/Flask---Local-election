@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, session, request
 
 from app import app
 from forms import LoginField, PasswordField
-from model import User
+from model import User, Election
 
 from extensions.LDAP import check_pw_ldap
 from extensions.FlaskSQLAlchemy import db
@@ -136,3 +136,8 @@ def logout():
         flash(INFO_DICT['LOGOUT'])
 
     return redirect(url_for('index'))
+
+@app.route('/election')
+def election():
+    all_elections = Election.query.all()
+    return render_template('election/index.html', elections = all_elections)

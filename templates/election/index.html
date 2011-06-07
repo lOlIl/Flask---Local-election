@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}Election index preview{% endblock %}
+
+{% block body %}
+<div class='volby'>
+  <h1>Election Index</h1>   
+    {% for election in elections %} 
+     
+        {% if election.status %}
+        <fieldset class='active'>
+            <legend style='text-decoration: blink;'>{{ election.title }} - v priebehu</legend>
+        {% else %}
+        <fieldset >
+            <legend>{{ election.title }}</legend>
+        {% endif %}
+            
+            <div class='item'>
+                {{ election.text }}
+            </div>
+            <div class='menu'>
+            
+            
+            
+            </div>
+        </fieldset>
+    {% else %}
+    <div class='item'>
+        None election in system.
+    </div>
+    {% endfor %}
+</div> 
+{% endblock %}
