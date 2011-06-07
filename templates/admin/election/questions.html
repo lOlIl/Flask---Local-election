@@ -3,6 +3,18 @@
 
 {% block title %}Election administration - Election question setup{% endblock %}
 
+{% block jquery %}
+
+    $("#more").click(function(){
+        $("#number").removeAttr("disabled");
+        });
+    $("#single").click(function(){
+        $("#number").attr("disabled","disabled");
+        $("#number").attr("value","");
+        });
+
+{% endblock %}
+
 {% block body %}
     <ul class=entries> 
         <a href="{{ url_for('admin')}}">ADMIN menu</a> >> 

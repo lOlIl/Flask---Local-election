@@ -7,9 +7,14 @@
     
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery/jquery-1.5.2.min.js') }}" ></script> 
+
     {% block headers %}{% endblock %}	
 
     <script type='text/javascript'>
+     $().ready(function() {
+        {% block jquery %}{% endblock %}	       
+        });
     {% block javascript %} {% endblock %}
     </script>
 
