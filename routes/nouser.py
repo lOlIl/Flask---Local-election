@@ -7,6 +7,8 @@ from model import User, Election
 from extensions.LDAP import check_pw_ldap
 from extensions.FlaskSQLAlchemy import db
 
+from datetime import datetime
+
 INFO_DICT = {
              'ADMIN':       u'Welcome back, Admin %s',
              'ADMIN_LDAP':  u'Welcome back, LDAP Admin %s',
@@ -137,7 +139,44 @@ def logout():
 
     return redirect(url_for('index'))
 
+
+"""
+
+    Basic election index function
+    Inputs:  -
+
+    Description:
+    - show all elections from database
+
+"""
+
 @app.route('/election')
 def election():
     all_elections = Election.query.all()
     return render_template('election/index.html', elections = all_elections)
+
+"""
+
+    Detail election function
+    Inputs:  election_id (election ID)
+
+    Description:
+    - show more details about selected election
+    - on non-existing election -> redirect to election index
+
+"""
+
+@app.route('/volby/<int:id_election>')
+def election_detail(id_election):
+    election = Election.query.filter_by(id=id_election).first()
+    if not election:
+        return redirect(url_for('election'))
+
+    if election.date_from < datetime.now() and election.date_to > datetime.now():
+        election.status = u'ACTIVE'
+    if election.date_from > datetime.now():
+        election.status = u'BEFORE'
+    if election.date_from < datetime.now():
+        election.status = u'AFTER'
+   
+    return render_template('election/detail.html', election = election)
