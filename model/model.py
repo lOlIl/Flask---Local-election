@@ -41,11 +41,11 @@ class Election(db.Model):
     date_to =   db.Column(db.DateTime)
     show  =     db.Column(db.Boolean)
 
-    def __init__(self, title, text, start = None, end = None, show=False):
-        self.title   = title
-        self.text    = text
-        self.show  = zobraz
+    def __init__(self, title, text, start = None, end = None, show = False):
+        self.title      = title
+        self.text       = text
+        self.show       = show   
         if start:
-            self.date_od = start
+            self.date_from = start
         if end:
-            self.date_do = end
+            self.date_to = end

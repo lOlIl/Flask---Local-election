@@ -9,6 +9,7 @@ class ElectionDescField(object):
 class ElectionShowField(object):
     label=u"Activate"
     name=u"show"
+    value=u"checked"
 
 class ElectionStartField(object):
     label=u"Date start"

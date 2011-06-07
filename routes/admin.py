@@ -58,12 +58,13 @@ def admin_election():
         except:
             end = None
 
-        show = 0
-        if request.form.get('show'): 
-            show = 0 
+        show = False
+        if request.form.get('show') != "None": 
+            show = True
+            flash(show)
 
         if start != None and end != None and name != "":
-            db.session.add(Election(name, desc, start, end, show) )
+            db.session.add(Election(name, desc, start, end, show))
             db.session.commit()
             flash(INFO_DICT['ELECTION_ADDED'])
         else:
