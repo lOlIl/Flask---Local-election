@@ -34,8 +34,11 @@
     <div class='volby'>
     <h1>Election Administration</h1>
         
+{% if id_election %}
+    {{ form.form(url_for('admin_election_update', id_election = id_election),legend="New Election") }}
+{% else %}
     {{ form.form(url_for('admin_election'),legend="New Election") }}
-   
+{% endif %}
         {{ form.input(input['name'],type="text") }}
         {{ form.input(input['desc'],type="textarea") }}   
         {{ form.input_checkbox(input['show']) }}
@@ -52,11 +55,14 @@
    
     <h1>Election Index</h1>
     
+    
+
     {% for election in elections %} 
     <fieldset> 
         <h1>{{ election.title }}</h1> 
         <div>
             {{ election.text }}
+            <a href='{{ url_for('admin_election_update', id_election = election.id) }}'>Update</a>
         </div>
     </fieldset>
     {% else %}
