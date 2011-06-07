@@ -234,3 +234,16 @@ fieldset {
     font-size: 18px; 
     font-weight: bold;
     }
+
+.volby .title{
+    font-size:  1.08em;
+    font-weight:  bold; 
+    margin:1em 0 1em 0.75em;   
+    }
+
+.volby .title p {
+    padding-top:0.5em;
+    font-weight:  normal; 
+    position:relative; 
+    left:50px;
+    }

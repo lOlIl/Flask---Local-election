@@ -7,21 +7,21 @@
     <h1>{{ election.title }}</h1>
 
     <fieldset>
-        <legend>Informácie o voľbách</legend>
+        <legend>Election info</legend>
 
-        <div class='title'>Začiatok volieb
-            <p>{{ election.date_od }}</p>
+        <div class='title'>Starting time:
+            <p>{{ election.date_from }}</p>
         </div>
         
-        <div class='title'>Ukončenie volieb
-            <p>{{ election.date_do }}</p>
+        <div class='title'>Ending time:
+            <p>{{ election.date_to }}</p>
         </div>        
 
-        <div class='title'>Stav volieb
+        <div class='title'>Status:
             <p>{{ election.status }}</p>
         </div>
 
-        <div class='title'>Popis volieb</div>
+        <div class='title'>Description</div>
         
             {{ election.text }}
         
