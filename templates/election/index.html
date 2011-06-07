@@ -9,18 +9,22 @@
      
         {% if election.status %}
         <fieldset class='active'>
-            <legend style='text-decoration: blink;'>{{ election.title }} - v priebehu</legend>
+            <legend style='text-decoration: blink;'>{{ election.title }} - on the fly</legend>
         {% else %}
         <fieldset >
             <legend>{{ election.title }}</legend>
         {% endif %}
             
+        {% if election.photo %}
+            <img src='{{ election.photo }}'>
+        {% endif %} 
+
             <div class='item'>
                 {{ election.text }}
             </div>
             <div class='menu'>
             
-            
+            <a href="{{ url_for('election_detail',id_election = election.id) }}">More details</a>
             
             </div>
         </fieldset>

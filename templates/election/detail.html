@@ -9,6 +9,10 @@
     <fieldset>
         <legend>Election info</legend>
 
+        {% if election.photo %}
+            <img src='{{ election.photo }}'>
+        {% endif %} 
+
         <div class='title'>Starting time:
             <p>{{ election.date_from }}</p>
         </div>

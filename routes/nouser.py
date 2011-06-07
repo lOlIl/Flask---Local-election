@@ -6,6 +6,7 @@ from model import User, Election
 
 from extensions.LDAP import check_pw_ldap
 from extensions.FlaskSQLAlchemy import db
+from extensions.FlaskUploads import electionHeader
 
 from datetime import datetime
 
@@ -153,6 +154,9 @@ def logout():
 @app.route('/election')
 def election():
     all_elections = Election.query.all()
+    for election in all_elections:
+        if election.photo:
+            election.photo = electionHeader.url(election.photo)    
     return render_template('election/index.html', elections = all_elections)
 
 """
@@ -179,4 +183,7 @@ def election_detail(id_election):
     if election.date_from < datetime.now():
         election.status = u'AFTER'
    
+    if election.photo:
+        election.photo = electionHeader.url(election.photo)    
+
     return render_template('election/detail.html', election = election)
