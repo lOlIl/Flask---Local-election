@@ -5,7 +5,7 @@ from extensions.FlaskSQLAlchemy import db
 from extensions.FlaskUploads import electionHeader
 
 from forms.election import *
-from model import Election, Question
+from model import Election, Question, Answer
 
 from string import atoi
 from time import strptime
@@ -28,11 +28,14 @@ INFO_DICT = {
             'QUESTION_CANDIDATE_SIMPLE' : u'Added new candidate question with single answer',
             'QUESTION_MORE'             : u'Added new question with multiple answers',
             'QUESTION_SIMPLE'           : u'Added new question with single answer',
+            'QUESTION_UPDATED'          : u'The question has been successfully updated',
+            'ANSWER_ADDED'              : u'Added new answer',
             }
 
 ERROR_DICT = {
             'INPUTS'            : u'Incorrect inputs.',  
-            'ELECTION_NONE'     : u'Not existing election',                 
+            'ELECTION_NONE'     : u'Not existing election', 
+            'QUESTION_NONE'     : u'This question does not exist'               
             }
 
 @app.route('/admin')
@@ -234,4 +237,45 @@ def admin_questions(id_election):
         return render_template('admin/election/questions.html',election = election, questions = questions, question = QuestionField())
 
     flash(ERROR_DICT['ELECTION_NONE'],category = 'error')
-    return redirect(url_for('admin_election'))    
+    return redirect(url_for('admin_election'))  
+
+
+"""
+
+    Admin function for showing (candidate) questions of election to update
+    Inputs: id_question(question ID)
+
+Description:
+    - show selected question to be updated
+    - possibility add answers
+
+"""
+
+@app.route('/admin/election/question/<int:id_question>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_question_edit(id_question): 
+    toEdit = Question.query.filter_by(id = id_question).first()
+    if toEdit:
+        if request.method == 'POST':    
+            toEdit.text = unicode(request.form['question'])
+            if request.form.get('more'):
+                if unicode(request.form['more'])=='more':
+                    toEdit.moreAnsw = True
+                    try:
+                        toEdit.count = int(unicode(request.form['count']))
+                    except:
+                        flash(ERROR_DICT['INPUT'],category='error')
+                else:    
+                    toEdit.moreAnsw = False
+                if request.form.get('candidate'):
+                    toEdit.candidate = True    
+                db.session.commit()
+                flash(INFO_DICT['QUESTION_UPDATED'])
+            return redirect(url_for('admin_questions',id_election = toEdit.vid))        
+
+
+        answers = Answer.query.filter_by(oid = id_question)
+        return render_template('admin/election/answers.html', question = toEdit, answers = answers)
+
+    flash(ERROR_DICT['QUESTION_NONE'],category = 'error')
+    return redirect(url_for('admin_election'))

@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% import "macros/forms.html" as form %}
+
+{% block title %}Election administration - Election question edit & answer set{% endblock %}
+
+{% block jquery %}  
+    
+    $("#more").click(function(){
+        $("#number").removeAttr("disabled");
+        });
+    $("#single").click(function(){
+        $("#number").attr("disabled","disabled");
+        $("#number").attr("value","");
+        $("#more").removeAttr("checked");
+        });
+
+{% endblock %}
+
+{% block body %}
+    <ul class=entries> 
+        <a href="{{ url_for('admin')}}">ADMIN menu</a> >> 
+        <a href="{{ url_for('admin_election')}}">Election menu</a> >>
+        <a href="{{ url_for('admin_questions',id_election       = question.vid)}}">Election questions</a> >>
+        <a href="{{ url_for('admin_question_edit',id_question   = question.id)}}">Edit question & set answers</a>
+    </ul>
+
+    {{ form.form(url_for('admin_question_edit',id_question = question.id),legend="Question edit") }}
+        {{ form.input({'name':'question','label':'Question','value':question.text}) }}
+        
+         {% if not question.moreAnsw %}
+            {{ form.input_checkbox({'name':'more','label':'One answer','checked':'checked','value':'single'},type='radio',id='single') }}
+            {{ form.input_checkbox({'name':'more','label':'More answers','value':'more'},type='radio',id='more') }}
+        {% else %}
+            {{ form.input_checkbox({'name':'more','label':'One answer','value':'single'},type='radio',id='single') }}
+            {{ form.input_checkbox({'name':'more','label':'More answers','checked':'checked','value':'more'},type='radio',id='more') }}
+        {% endif %}
+        <div class='input'>
+            <label>Count of selected answers</label>
+            <input name='count' type='text' style='width:25px;' id='number' {% if not question.moreAnsw %} disabled {% else %} value='{{ question.count }}' {% endif %} >
+        </div>
+        {% if not question.candidate %}
+            {{ form.input_checkbox({'name':'candidate','label':'Candidates'},hidden=True) }}
+        {% else %}
+            {{ form.input_checkbox({'name':'candidate','label':'Candidates','checked':'checked','value':'ok'},hidden=True) }}
+        {% endif %}
+
+        {{ form.submit(text='Edit question') }}
+    
+    {{ form.endform() }}
+
+    <hr>
+
+  
+{% endblock %}
+
