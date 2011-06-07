@@ -7,9 +7,13 @@
     
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
 
-    <title>
-        {% block headtitle %}  {{ self.title() }} {% endblock %}
-    </title>
+    {% block headers %}{% endblock %}	
+
+    <script type='text/javascript'>
+    {% block javascript %} {% endblock %}
+    </script>
+
+    <title>{% block headtitle %}  {{ self.title() }} {% endblock %}</title>
 </head>
 
 <body>
