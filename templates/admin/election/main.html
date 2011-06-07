@@ -53,16 +53,27 @@
 
     {{ form.endform() }}
    
+{% if id_election %}
+    <fieldset class="input">
+        <legend>Election header upload</legend> 
+        <form action="{{ url_for('admin_election_upload', id_election = id_election ) }}" method='post' enctype='multipart/form-data'>
+            {{ form.input({'name':'photo', 'label':'Election header'},type='file') }}
+            {{ form.submit(text='Upload obrázku') }}
+        </form>
+    </fieldset>
+{% endif %}
+
     <h1>Election Index</h1>
     
-    
-
     {% for election in elections %} 
     <fieldset> 
-        <h1>{{ election.title }}</h1> 
+        <h1>{{ election.title }}</h1>
+        {% if election.photo %}
+            <img src='{{ election.photo }}'>
+        {% endif %} 
         <div>
             {{ election.text }}
-            <a href='{{ url_for('admin_election_update', id_election = election.id) }}'>Update</a>
+            <a href='{{ url_for('admin_election_update', id_election = election.id) }}'>Update election</a>
         </div>
     </fieldset>
     {% else %}

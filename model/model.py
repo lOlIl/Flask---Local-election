@@ -40,6 +40,7 @@ class Election(db.Model):
     date_from = db.Column(db.DateTime)
     date_to =   db.Column(db.DateTime)
     show  =     db.Column(db.Boolean)
+    photo =     db.Column(db.String(64))
 
     def __init__(self, title, text, start = None, end = None, show = False):
         self.title      = title

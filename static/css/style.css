@@ -247,3 +247,8 @@ fieldset {
     position:relative; 
     left:50px;
     }
+
+.volby img {
+    width:520px;
+    height:150px;
+    }

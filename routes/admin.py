@@ -2,8 +2,9 @@ from app import app
 from decorators import *
 
 from extensions.FlaskSQLAlchemy import db
-from forms.election import *
+from extensions.FlaskUploads import electionHeader
 
+from forms.election import *
 from model import Election
 
 from string import atoi
@@ -26,7 +27,8 @@ INFO_DICT = {
             }
 
 ERROR_DICT = {
-            'INPUTS'            : u'Incorrect inputs.',                  
+            'INPUTS'            : u'Incorrect inputs.',  
+            'ELECTION_NONE'     : u'Not existing election'                    
             }
 
 @app.route('/admin')
@@ -62,7 +64,6 @@ def admin_election():
         show = False
         if request.form.get('show') != "None": 
             show = True
-            flash(show)
 
         if start != None and end != None and name != "":
             db.session.add(Election(name, desc, start, end, show))
@@ -80,6 +81,9 @@ def admin_election():
                     ('show',        ElectionShowField())
                  ])
     all_elections = Election.query.all()
+    for election in all_elections:
+        if election.photo:
+            election.photo = electionHeader.url(election.photo)    
     return render_template('admin/election/main.html', input = inputs, elections = all_elections)
 
 """
@@ -155,5 +159,27 @@ def admin_election_update(id_election):
 
         return render_template('admin/election/main.html', elections = all_elections, input = inputs, id_election = election.id)
 
-    flash(ELECTION_NONE,category = 'error')
+    flash(ERROR_DICT['ELECTION_NONE'],category = 'error')
     return redirect(url_for('admin_election'))
+
+"""
+
+    Admin function for uploading election header 
+    Inputs: id_election(election ID)
+
+    Description:
+    - election header saved into app
+    - used Flask-Uploads
+    - correct Election and selected photo file
+
+"""
+
+@app.route('/admin/volby/<int:id_election>/upload', methods=['POST'])
+@admin_required
+def admin_election_upload(id_election):
+    election = Election.query.filter_by(id = id_election).first()
+    if request.method == 'POST' and election and 'photo' in request.files:
+        header = electionHeader.save(request.files['photo'])
+        election.photo = header
+        db.session.commit()
+    return redirect(url_for('admin_election'))    
