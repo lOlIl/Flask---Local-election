@@ -72,8 +72,8 @@
             <img src='{{ election.photo }}'>
         {% endif %} 
         <div>
-            {{ election.text }}
-            <a href='{{ url_for('admin_election_update', id_election = election.id) }}'>Update election</a>
+            <a href='{{ url_for('admin_election_update', id_election = election.id) }}'>Update election</a><br/>
+            <a href='{{ url_for('admin_questions', id_election = election.id) }}'>Election questions</a>
         </div>
     </fieldset>
     {% else %}

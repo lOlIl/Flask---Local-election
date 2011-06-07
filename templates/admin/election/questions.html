@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% import "macros/forms.html" as form %}
+
+{% block title %}Election administration - Election question setup{% endblock %}
+
+{% block body %}
+    <ul class=entries> 
+        <a href="{{ url_for('admin')}}">ADMIN menu</a> >> 
+        <a href="{{ url_for('admin_election')}}">Election menu</a> >>
+        <a href="{{ url_for('admin_questions',id_election   = election.id)}}">Election questions</a>
+    </ul>
+
+    <div class='volby'>
+    <h1>Election question setup</h1>
+    
+    <fieldset>
+    <legend>Election questions</legend>
+        {% set i=1  %}
+        {% for question in questions %}  
+        <div class='title'> {{ i }}. {{ question.text }} </div>
+          
+            
+        {% set i=i+1 %}
+        {% else %}
+            No questions added yet.
+        {% endfor %}
+
+    </fieldset>
+
+    {{ form.form(url_for('admin_questions',id_election = election.id), legend="New question") }}
+        {{ form.input(question) }}
+
+        {{ form.input_checkbox({'name':'more','label':'One answer', 'checked':'checked'},type='radio',id='single') }}
+        {{ form.input_checkbox({'name':'more','label':'More answers','value':'more'},type='radio',id='more') }}
+
+        <div class='input'>
+            <label>Count of selected answers</label>
+            <input name='count' type='text' style='width:25px;' id='number' disabled >
+        </div>
+        {{ form.input_checkbox({'name':'candidate','label':'Candidates','value':'ok'}) }}
+
+        {{ form.submit(text='Save new question') }}
+    {{ form.endform() }}
+
+    </div>
+
+{% endblock %}
+

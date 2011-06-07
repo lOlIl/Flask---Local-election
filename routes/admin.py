@@ -5,7 +5,7 @@ from extensions.FlaskSQLAlchemy import db
 from extensions.FlaskUploads import electionHeader
 
 from forms.election import *
-from model import Election
+from model import Election, Question
 
 from string import atoi
 from time import strptime
@@ -22,13 +22,17 @@ from datetime import datetime
 """
 
 INFO_DICT = {
-            'ELECTION_ADDED'    : u'Created new election.',
-            'ELECTION_UPDATED'  : u'Election has been successfully updated.'
+            'ELECTION_ADDED'            : u'Created new election.',
+            'ELECTION_UPDATED'          : u'Election has been successfully updated.',
+            'QUESTION_CANDIDATE_MORE'   : u'Added new candidate question with multiple answers',
+            'QUESTION_CANDIDATE_SIMPLE' : u'Added new candidate question with single answer',
+            'QUESTION_MORE'             : u'Added new question with multiple answers',
+            'QUESTION_SIMPLE'           : u'Added new question with single answer',
             }
 
 ERROR_DICT = {
             'INPUTS'            : u'Incorrect inputs.',  
-            'ELECTION_NONE'     : u'Not existing election'                    
+            'ELECTION_NONE'     : u'Not existing election',                 
             }
 
 @app.route('/admin')
@@ -182,4 +186,52 @@ def admin_election_upload(id_election):
         header = electionHeader.save(request.files['photo'])
         election.photo = header
         db.session.commit()
+    return redirect(url_for('admin_election'))    
+
+"""
+
+    Admin function for adding questions to election 
+    Inputs: id_election(election ID)
+
+    Description:
+    - election summary with (candidate)question and answers
+
+"""
+
+@app.route('/admin/election/<int:id_election>/questions',methods=['GET', 'POST'])
+@admin_required
+def admin_questions(id_election):
+    if request.method == 'POST':
+        moreAnsw = candidates = False
+        if request.form.get('more'):
+            if unicode(request.form['more'])=='more':
+                moreAnsw = True
+        if request.form.get('candidate') and request.form['candidate']=="ok":
+            candidates = True  
+        count = 0
+        if request.form.get('count'):
+            try:
+                count = int(unicode(request.form['count']))
+            except:
+                flash(QUESTION_INPUT,category='error')
+                return redirect(url_for('admin_questions',id_election = id_election))
+
+        db.session.add(Question(unicode(request.form['question']),id_election, count, moreAnsw, candidates))
+        db.session.commit()
+
+        if (candidates and moreAnsw):
+            flash(INFO_DICT['QUESTION_CANDIDATE_MORE'])   
+        elif (candidates):
+            flash(INFO_DICT['QUESTION_CANDIDATE_SIMPLE'])  
+        elif (moreAnsw):
+            flash(INFO_DICT['QUESTION_MORE'])   
+        else:
+            flash(INFO_DICT['QUESTION_SIMPLE'])
+
+    election = Election.query.filter_by(id = id_election).first()
+    if election:
+        questions = Question.query.filter_by(vid = id_election)   
+        return render_template('admin/election/questions.html',election = election, questions = questions, question = QuestionField())
+
+    flash(ERROR_DICT['ELECTION_NONE'],category = 'error')
     return redirect(url_for('admin_election'))    

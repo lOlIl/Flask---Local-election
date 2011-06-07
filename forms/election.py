@@ -32,3 +32,8 @@ class ElectionEndTimeField(object):
     name_2=u"endTime_min"      
     value_1=0
     value_2=0   
+
+class QuestionField(object):
+    label=u"New question"
+    name=u"question"
+

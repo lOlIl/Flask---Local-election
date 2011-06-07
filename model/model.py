@@ -2,6 +2,8 @@ from extensions.FlaskSQLAlchemy import db
 
 from werkzeug import generate_password_hash, check_password_hash
 
+from sqlalchemy import ForeignKey
+
 class User(db.Model):
     __tablename__ = 'user'
     id =                db.Column(db.Integer, primary_key=True)    
@@ -50,3 +52,22 @@ class Election(db.Model):
             self.date_from = start
         if end:
             self.date_to = end
+
+class Question(db.Model):
+    __tablename__ = 'question'
+    id =        db.Column(db.Integer, primary_key=True)
+    vid =       db.Column(db.Integer, ForeignKey('election.id'))
+    text =      db.Column(db.String(100))
+    count =     db.Column(db.Integer)                                   # maximal count of selected answers
+    moreAnsw =  db.Column(db.Boolean)                                   # if in question can be selected more than 1 answer
+    candidate = db.Column(db.Boolean)                                   # if the question is with candidates
+  
+    def __init__(self, text, vid, count, more = False, candidate = False):
+        self.text = text
+        self.vid = vid
+        self.count = count
+        self.moreAnsw = more
+        self.candidate = candidate
+
+    def __repr__(self):
+        return '<Question %r>' % self.text
