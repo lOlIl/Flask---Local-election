@@ -19,15 +19,17 @@ INFO_DICT = {
             'QUESTION_MORE'             : u'Added new question with multiple answers',
             'QUESTION_SIMPLE'           : u'Added new question with single answer',
             'QUESTION_UPDATED'          : u'The question has been successfully updated',
+            'QUESTION_DELETED'          : u'Question deleted',     
             'ANSWER_ADDED'              : u'Added new answer',
             'ANSWER_UPDATED'            : u'The answer has been successfully updated', 
-            'ANSWER_DELETED'            : u'Deleted answer',    
+            'ANSWER_DELETED'            : u'Answer deleted',
+            'ANSWERS_DEL'               : u'Deleted %s answers',    
             }
 
 ERROR_DICT = {
             'INPUTS'            : u'Incorrect inputs.',  
             'ELECTION_NONE'     : u'Not existing election', 
-            'QUESTION_NONE'     : u'This question does not exist'               
+            'QUESTION_NONE'     : u'This question does not exist'             
             }
 
 """
@@ -273,7 +275,7 @@ def admin_question_edit(id_question):
                     toEdit.candidate = True    
                 db.session.commit()
                 flash(INFO_DICT['QUESTION_UPDATED'])
-            return redirect(url_for('admin_questions',id_election = toEdit.vid))        
+            return redirect(url_for('admin_questions_edit',id_question = id_question))        
 
 
         answers = Answer.query.filter_by(oid = id_question)
@@ -293,7 +295,7 @@ def admin_question_edit(id_question):
 
 """
 
-@app.route('/admin/election/questions/<int:id_question>', methods=['GET', 'POST'])
+@app.route('/admin/election/question/<int:id_question>', methods=['GET', 'POST'])
 @admin_required
 def admin_answers(id_question):
     toAdd = Question.query.filter_by(id = id_question).first()    
@@ -302,9 +304,35 @@ def admin_answers(id_question):
             db.session.add(Answer(answer,id_question))
             flash(INFO_DICT['ANSWER_ADDED'])
             db.session.commit()     
-            
-        question = Question.query.filter_by(id = id_question).first()
-        return redirect(url_for('admin_questions',id_election = question.vid))
+
+        return redirect(url_for('admin_question_edit',id_question = id_question))
+
+    flash(ERROR_DICT['QUESTION_NONE'],category = 'error')
+    return redirect(url_for('admin_election'))
+
+"""
+
+    Admin function for deleting (candidate) questions of election 
+    Inputs: id_question(question ID)
+
+    Description:
+    - check, if question exists
+    - delete the (candidate) questions with answers
+
+"""
+
+@app.route('/admin/election/question/<int:id_question>/delete')
+@admin_required
+def admin_question_delete(id_question):
+    toDel = Question.query.filter_by(id = id_question).first()
+    if toDel:
+        id_election = toDel.vid
+        flash(INFO_DICT['ANSWERS_DEL'] % str(Answer.query.filter_by(oid = id_question).count()))
+        Answer.query.filter_by(oid = id_question).delete()   # delete all ANSWERS of question
+        Question.query.filter_by(id = id_question).delete()  # delete QUESTION
+        db.session.commit()
+        flash(INFO_DICT['QUESTION_DELETED'])
+        return redirect(url_for('admin_questions',id_election = id_election))
 
     flash(ERROR_DICT['QUESTION_NONE'],category = 'error')
     return redirect(url_for('admin_election'))

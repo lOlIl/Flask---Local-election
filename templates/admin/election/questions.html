@@ -3,6 +3,15 @@
 
 {% block title %}Election administration - Election question setup{% endblock %}
 
+{% block javascript %}
+    function deleteQuestion(id){
+        var answer = confirm("Really delete this question?");
+        if (answer){
+            window.location = "/admin/election/question/"+ id +"/delete";        
+	        }
+        }
+{% endblock %}
+
 {% block jquery %}
 
     $("#more").click(function(){
@@ -31,7 +40,9 @@
         {% for question in questions %}  
         <div class='title'> {{ i }}. {{ question.text }} </div>
         
-        <a href='{{ url_for('admin_question_edit', id_question = question.id)}}'>Edit question & set answers</a>    
+        <a href='{{ url_for('admin_question_edit', id_question = question.id)}}'>To edit & set answers</a>
+        <a onclick='deleteQuestion({{ question.id }});'>To delete</a>
+    
         {% set i=i+1 %}
         {% else %}
             No questions added yet.
