@@ -20,6 +20,15 @@
 			dateFormat:"%Y-%m-%d"
 		});
 	};
+
+    function deleteElection(id){
+        var answer1 = confirm("Really delete this election?");
+        if (answer1){
+            var answer2 = confirm("Really delete all election elements(Questions,Answers)?");
+            if (answer2)
+                window.location = "/admin/election/" + id + "/delete";        
+	        }
+        }
 {% endblock %}
 
 {% block title %}Administrácia volieb {% endblock %}
@@ -73,7 +82,9 @@
         {% endif %} 
         <div>
             <a href='{{ url_for('admin_election_update', id_election = election.id) }}'>Update election</a><br/>
+            <a onclick='deleteElection({{ election.id }})'>Delete election</a><br/><br/>
             <a href='{{ url_for('admin_questions', id_election = election.id) }}'>Election questions</a>
+
         </div>
     </fieldset>
     {% else %}

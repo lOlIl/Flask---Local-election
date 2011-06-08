@@ -14,6 +14,7 @@ from datetime import datetime
 INFO_DICT = {
             'ELECTION_ADDED'            : u'Created new election.',
             'ELECTION_UPDATED'          : u'Election has been successfully updated.',
+            'ELECTION_DELETED'          : u'Election deleted', 
             'QUESTION_CANDIDATE_MORE'   : u'Added new candidate question with multiple answers',
             'QUESTION_CANDIDATE_SIMPLE' : u'Added new candidate question with single answer',
             'QUESTION_MORE'             : u'Added new question with multiple answers',
@@ -23,7 +24,9 @@ INFO_DICT = {
             'ANSWER_ADDED'              : u'Added new answer',
             'ANSWER_UPDATED'            : u'The answer has been successfully updated', 
             'ANSWER_DELETED'            : u'Answer deleted',
-            'ANSWERS_DEL'               : u'Deleted %s answers',    
+
+            'ANSWERS_DEL'               : u'Deleted %s answers', 
+            'QUESIONS_DEL'              : u'Deleted %s questions',
             }
 
 ERROR_DICT = {
@@ -194,6 +197,37 @@ def admin_election_upload(id_election):
         election.photo = header
         db.session.commit()
     return redirect(url_for('admin_election'))    
+
+"""
+
+    Admin function for deleting all election elements 
+    Inputs: id_election(election ID)
+
+    Description:
+    - delete election records, multi confirmation required.
+
+"""
+
+@app.route('/admin/election/<int:id_election>/delete')
+@admin_required
+def admin_election_delete(id_election):
+    election = Election.query.filter_by(id = id_election).first()
+    if election:
+        flash(INFO_DICT['ANSWERS_DEL'] % Answer.query.join((Question,Question.id==Answer.oid)).filter_by(vid = id_election).count())
+        for question in Question.query.filter_by(vid = id_election).all():
+            Answer.query.filter_by(oid = question.id).delete()                                  # delete all Answers Question by Question  
+
+        flash(INFO_DICT['QUESIONS_DEL'] % Question.query.filter_by(vid = id_election).count())
+        Question.query.filter_by(vid = id_election).delete()                                    # delete Questions
+
+        flash(INFO_DICT['ELECTION_DELETED'])
+        Election.query.filter_by(id = id_election).delete()
+        db.session.commit()
+    else:
+        flash(ERROR_DICT['ELECTION_NONE'],category = 'error')
+
+    return redirect(url_for('admin_election'))
+
 
 """
 
