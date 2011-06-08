@@ -3,6 +3,15 @@
 
 {% block title %}Election administration - Election question edit & answer set{% endblock %}
 
+{% block javascript %}
+    function deleteAnswer(id){
+        var answer = confirm("Really delete this answer?");
+        if (answer){
+            window.location = "/admin/election/answer/"+ id +"/delete";        
+	        }
+        }
+{% endblock %}
+
 {% block jquery %}  
     
     $("#more").click(function(){
@@ -12,6 +21,10 @@
         $("#number").attr("disabled","disabled");
         $("#number").attr("value","");
         $("#more").removeAttr("checked");
+        });
+
+    $(".toDel").click(function(){
+        
         });
 
 {% endblock %}
@@ -49,7 +62,7 @@
     {{ form.endform() }}
 
 
-    {{ form.form(url_for('admin_answers',id_question = question.id),legend="Pridávanie nových možnosti",id="my_form") }}
+    {{ form.form(url_for('admin_answers',id_question = question.id),legend="New answers",id="my_form") }}
 
         {{ form.input({'name':'answer','label':'Answer'} ) }}
         {{ form.submit(text='Save this answer') }}        
@@ -66,8 +79,10 @@
             {{ form.input({'name':'answer','label':'Answer','value':answer.text} ) }}
             {{ form.submit(text='Update answer') }}
 
-            <input type=button value="Delete this answer" onclick='delQuestion({{ answer.id }})'>
-
+            <div class="input">
+                <label>&nbsp;</label>
+                <input type=button value="Delete answer" onclick='deleteAnswer({{ answer.id }})'>
+            </div>   
 
         {{ form.endform() }}  
 

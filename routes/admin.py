@@ -11,16 +11,6 @@ from string import atoi
 from time import strptime
 from datetime import datetime
 
-"""
-
-    Admin function for basic admin menu
-    Inputs:  -
-
-    Description:
-    - show the elements in admin menu
-
-"""
-
 INFO_DICT = {
             'ELECTION_ADDED'            : u'Created new election.',
             'ELECTION_UPDATED'          : u'Election has been successfully updated.',
@@ -30,7 +20,8 @@ INFO_DICT = {
             'QUESTION_SIMPLE'           : u'Added new question with single answer',
             'QUESTION_UPDATED'          : u'The question has been successfully updated',
             'ANSWER_ADDED'              : u'Added new answer',
-            'ANSWER_UPDATED'            : u'The answer has been successfully updated',     
+            'ANSWER_UPDATED'            : u'The answer has been successfully updated', 
+            'ANSWER_DELETED'            : u'Deleted answer',    
             }
 
 ERROR_DICT = {
@@ -38,6 +29,16 @@ ERROR_DICT = {
             'ELECTION_NONE'     : u'Not existing election', 
             'QUESTION_NONE'     : u'This question does not exist'               
             }
+
+"""
+
+    Admin function for basic admin menu
+    Inputs:  -
+
+    Description:
+    - show the elements in admin menu
+
+"""
 
 @app.route('/admin')
 @admin_required
@@ -182,7 +183,7 @@ def admin_election_update(id_election):
 
 """
 
-@app.route('/admin/volby/<int:id_election>/upload', methods=['POST'])
+@app.route('/admin/election/<int:id_election>/upload', methods=['POST'])
 @admin_required
 def admin_election_upload(id_election):
     election = Election.query.filter_by(id = id_election).first()
@@ -330,3 +331,26 @@ def admin_answer_update(id_answer):
         flash(INFO_DICT['ANSWER_UPDATED'])
     
     return redirect(url_for('admin_question_edit', id_question = answer.oid))
+
+"""
+
+    Admin function for delete answer of question 
+    Inputs: id_answer(answer ID)
+
+    Description:
+    - check, if the answer exists
+    - delete the selected answer
+
+"""
+
+@app.route('/admin/election/answer/<int:id_answer>/delete')
+@admin_required
+def moznosti_delete(id_answer):
+    answer = Answer.query.filter_by(id = id_answer).first()
+    if answer:
+        id_question = answer.oid
+        Answer.query.filter_by(id = id_answer).delete()
+        db.session.commit()
+        flash(INFO_DICT['ANSWER_DELETED'])
+        return redirect(url_for('admin_question_edit',id_question = id_question))
+    return redirect(url_for('admin_election'))
