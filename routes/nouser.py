@@ -170,7 +170,7 @@ def election():
 
 """
 
-@app.route('/volby/<int:id_election>')
+@app.route('/election/<int:id_election>')
 def election_detail(id_election):
     election = Election.query.filter_by(id=id_election).first()
     if not election:

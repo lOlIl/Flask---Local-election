@@ -84,3 +84,15 @@ class Answer(db.Model):
 
     def __repr__(self):
         return '<Answer %r>' % self.text
+
+class Voting(db.Model):
+    __tablename__ = 'voting'
+    id =        db.Column(db.Integer, primary_key=True)
+    uid =       db.Column(db.Integer, ForeignKey('user.id'))
+    mid =       db.Column(db.Integer, ForeignKey('answer.id'))                  # answer ID
+    vid =       db.Column(db.Integer, ForeignKey('election.id'))                # election ID
+
+    def __init__(self, uid, mid,vid):
+        self.uid = uid
+        self.mid = mid
+        self.vid = vid

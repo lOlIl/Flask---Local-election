@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% import "macros/forms.html" as form %}
+
+{% block title %} Election - {{ election.title }}{% endblock %}
+
+{% block body %}
+    
+    <form method='POST' action="{{  url_for('election_voting',id_election = election.id)  }}">
+
+    {% set i=1 %}
+    {% for question in questions %} 
+    <fieldset class="volby" >
+        <legend>Question {{ i }}</legend>
+            <div class='title'>
+            {{ question.text }}
+            </div>
+            
+            <div class="item" id="{{ i }}">
+            {% for answer in answers %}
+                {% if answer.oid == question.id %}
+                    {% for photo in photos %}
+                            {% if photo.id == answer.id %}<img src="{{ photo.url }}" class='middle'>{% endif %}
+                    {% endfor %}
+                    {% if not question.moreAnsw %}
+                    <p>                    
+                        <input type='radio' name='question[{{ question.id }}]' value='{{ answer.id }}'>{{ answer.text }}
+                    </p>
+                    {% else %}
+                    <p>
+                        <input type='checkbox' name='answer[{{ answer.id }}]' value='{{ answer.id }}'>{{ answer.text }}
+                    </p>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </div>   
+    {% set i=i+1 %}
+    </fieldset>                
+    {% endfor %}
+    <div class='item'>
+        <input type='submit' value = "Save my voting">
+    </div>
+{% endblock %}
+
