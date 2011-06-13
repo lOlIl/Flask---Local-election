@@ -309,8 +309,6 @@ def admin_question_edit(id_question):
                     toEdit.candidate = True    
                 db.session.commit()
                 flash(INFO_DICT['QUESTION_UPDATED'])
-            return redirect(url_for('admin_questions_edit',id_question = id_question))        
-
 
         answers = Answer.query.filter_by(oid = id_question)
         return render_template('admin/election/answers.html', question = toEdit, answers = answers)
